@@ -38,7 +38,7 @@ void MainWindow::OnPaint(HDC hdc){
 	SetTextColor(hdc, fontColor);
 	
 	//headers
-	for (int cnt = 1; cnt < numNumbers + 1; ++cnt) {
+	for (int cnt = 1; cnt < numNumbers+1; ++cnt) {
 	RECT leftHeader{ cnt*pnt.x,0,(cnt + 1)*pnt.x, pnt.y }, topHeader{ 0, cnt*pnt.y,pnt.x, (cnt + 1)*pnt.y };
 	std::string txt = std::to_string(cnt);
 	DrawText(hdc, txt.c_str(), -1, &topHeader, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
@@ -47,8 +47,8 @@ void MainWindow::OnPaint(HDC hdc){
 
 	//table drawing
 	//cntRow->cords for Y (Line we are positioned) ::::::::: cntClmn->cords for x (column we are positioned)
-	for (int cntRow = 1; cntRow <= numNumbers+1; ++cntRow) {
-		for (int cntClmn = 1; cntClmn <= numNumbers+1; ++cntClmn) {
+	for (int cntRow = 1; cntRow <= numNumbers; ++cntRow) {
+		for (int cntClmn = 1; cntClmn <= numNumbers; ++cntClmn) {
 			RECT loopRect{cntRow*pnt.x, cntClmn*pnt.y, (cntRow+1)*pnt.x, (cntClmn+1)*pnt.y};
 			std::string mult = std::to_string(cntRow*cntClmn);
 			DrawText(hdc, mult.c_str(), -1, &loopRect, DT_CENTER|DT_SINGLELINE|DT_VCENTER);
@@ -76,9 +76,10 @@ void MainWindow::OnCommand(int id){
 		case ID_NUMBER: {
 			NumberDialog numDlg;
 			numDlg.edNum = numNumbers;
-			numDlg.DoModal(NULL, *this);
-			numNumbers = numDlg.edNum;
-			InvalidateRect(*this, 0, TRUE);
+			if (numDlg.DoModal(NULL, *this)==IDOK) {
+				numNumbers = numDlg.edNum;
+				InvalidateRect(*this, 0, TRUE);
+			}
 			break;
 		}
 		case ID_EXIT: 
